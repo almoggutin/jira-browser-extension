@@ -1,0 +1,19 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+commit_message_file="$1"
+branch_name=$(git symbolic-ref --short HEAD)
+
+case "$branch_name" in
+  feature/*|pre-hotfix/*)
+    jira_ticket=$(echo "$branch_name" | grep -o 'TAB-[0-9]\+')
+    if [ -n "$jira_ticket" ]; then
+      sed -i.bak -e "1s/^/[$jira_ticket] /" "$commit_message_file"
+      rm "$commit_message_file.bak"
+    fi
+    ;;
+  release/*|hotfix/*)
+    sed -i.bak -e "1s/^/[$branch_name] /" "$commit_message_file"
+    rm "$commit_message_file.bak"
+    ;;
+esac

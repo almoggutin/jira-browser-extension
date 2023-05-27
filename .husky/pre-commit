@@ -1,0 +1,18 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+branch_name=$(git symbolic-ref --short HEAD)
+
+# if [ "$branch_name" = "verification" ]; then
+#   echo "Running tests before commit on the verification branch..."
+#   npm run test
+#   test_result=$?
+
+#   if [ $test_result -ne 0 ]; then
+#     echo "Tests failed. Commit aborted."
+#     exit 1
+#   fi
+# fi
+
+echo "Running pre-commit hooks..."
+npx lint-staged --concurrent false
